@@ -21,6 +21,7 @@ public class SftpUtil
         String destDirName = "/var/tmp/"; // This is directory of the destination where file will be placed
         String srcDirName = "/wiremock-1.57-standalone.jar"; // This is the source file to be transfered,which is available in resource folder
         scpPutFiles(srcDirName, destDirName);
+        readFromFile("/home/karaf/.ssl/rmca-rest/server/keystore.passphase");
     }
 
     private static void scpPutFiles(String srcDirName, String destDirName)
@@ -63,8 +64,7 @@ public class SftpUtil
 
             ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
             channelSftp.connect();
-            //Read data from remote machine
-			InputStream stream = channelSftp.get("/home/karaf/.ssl/rmca-rest/server/keystore.passphase");
+			InputStream stream = channelSftp.get(command); //Read data from remote machine
 			
 			 try {
 	                BufferedReader br = new BufferedReader(new InputStreamReader(stream));
