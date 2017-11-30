@@ -1,6 +1,9 @@
 package com.utitties.sftp;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -44,6 +47,48 @@ public class SftpUtil
         {
             e.printStackTrace();
         }
+
+    }
+    
+    private static String readFromFile(String command)
+    {
+    	String line = null;
+        try
+        {
+            JSch jsch = new JSch();
+            Session session = jsch.getSession(USER_NAME, HOST_NAME, 22);
+            session.setPassword(PASSWORD);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.connect();
+
+            ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
+            channelSftp.connect();
+            //Read data from remote machine
+			InputStream stream = channelSftp.get("/home/karaf/.ssl/rmca-rest/server/keystore.passphase");
+			
+			 try {
+	                BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+	                
+	                while ((line = br.readLine()) != null) {
+	                    System.out.println(line);
+	                }
+
+	            } catch (IOException io) {
+	                System.out.println("Exception occurred during reading file from SFTP server due to " + io.getMessage());
+	                io.getMessage();
+
+	            } catch (Exception e) {
+	                System.out.println("Exception occurred during reading file from SFTP server due to " + e.getMessage());
+	                e.getMessage();
+
+	            }
+            channelSftp.disconnect();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+		return line;
 
     }
 }
