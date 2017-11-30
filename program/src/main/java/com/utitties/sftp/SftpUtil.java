@@ -65,6 +65,7 @@ public class SftpUtil
             ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
             channelSftp.connect();
 			InputStream stream = channelSftp.get(command); //Read data from remote machine
+
 			
 			 try {
 	                BufferedReader br = new BufferedReader(new InputStreamReader(stream));
